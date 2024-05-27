@@ -7,4 +7,4 @@ class splashscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Placeholder();
   }
-}:(
+}
