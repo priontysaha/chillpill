@@ -33,7 +33,7 @@ class _splashscreenState extends State<splashscreen> {
             child: Text("ChillPill",
             style: TextStyle(
                 fontSize: 65.0,
-                fontStyle: FontStyle.normal   ,
+                fontStyle: FontStyle.normal,
                 color: Colors.indigo,
                 fontWeight: FontWeight.bold,
                 backgroundColor: Colors.transparent
