@@ -15,9 +15,9 @@ class Welcome extends StatelessWidget {
         decoration: const BoxDecoration(
             gradient: LinearGradient(
                 colors: [
-                  Color(0xffff4590),
-                  Color(
-                    0xff382743,
+                  Color(0xfff8bbd0),
+                  Color(0xfffce4ec,
+
                   )
                 ],
                 begin: Alignment.topLeft,
