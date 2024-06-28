@@ -1,10 +1,36 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chillpill/WELCOME/registration.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class login extends StatelessWidget {
+import '../User auth/Firebase_auth_implementation/firebase_auth_services.dart';
+import 'homepage.dart';
+
+class login extends StatefulWidget {
+  const login({super.key});
+
+
   @override
+  State<login> createState() => _loginState();
+}
+
+class _loginState extends State<login> {
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+
+
+    super.dispose();
+  }
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
@@ -40,6 +66,7 @@ class login extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
+              controller: _emailController,
               decoration: InputDecoration(
                 labelText: 'Enter E-mail',
                 suffixIcon: Icon(Icons.alternate_email_rounded),
@@ -54,6 +81,7 @@ class login extends StatelessWidget {
               height: 20,
             ),
             TextField(
+              controller: _passwordController,
               decoration: InputDecoration(
                 labelText: 'Enter Password',
                 suffixIcon: Icon(Icons.password_outlined),
@@ -69,9 +97,7 @@ class login extends StatelessWidget {
             ),
             SizedBox(height: 50,),
             ElevatedButton(
-                onPressed: () {
-                  Get.to(login());
-                },
+                onPressed: _signIn,
                 child: Text("Log In", style: TextStyle(fontSize: 20.0),)
             ),
             SizedBox(height: 10),
@@ -98,4 +124,21 @@ class login extends StatelessWidget {
       ),
     );
   }
+
+  Future _signIn() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    UserCredential? cred = await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+    User? user = cred.user;
+    if(user != null){
+      print("User is successfully signedIn");
+      //Navigator.pushNamed(context, "/home");
+      Get.offAll(homepage());
+    }
+    else
+      print("Some error happened");
+  }
+
 }
