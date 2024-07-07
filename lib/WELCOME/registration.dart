@@ -99,6 +99,7 @@ class _registrationState extends State<registration> {
               height: 20,
             ),
             TextFormField(
+              obscureText: true,
               controller: _passwordController,
               decoration: InputDecoration(
                   labelText: 'Enter Password',

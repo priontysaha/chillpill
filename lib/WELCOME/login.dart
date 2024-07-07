@@ -82,6 +82,7 @@ class _loginState extends State<login> {
             ),
             TextField(
               controller: _passwordController,
+              obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Enter Password',
                 suffixIcon: Icon(Icons.password_outlined),
