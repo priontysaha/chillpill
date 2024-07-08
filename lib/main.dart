@@ -1,5 +1,6 @@
 import 'package:chillpill/PAGES/new_entry_bloc.dart';
 import 'package:chillpill/firebase_options.dart';
+import 'package:chillpill/global_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,18 +29,18 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-  NewEntryBloc? newEntryBloc;
+  GlobalBloc? globalBloc;
 
   @override
   void initState() {
-    newEntryBloc = NewEntryBloc();
+    globalBloc = GlobalBloc();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Provider<NewEntryBloc>.value(
-        value: newEntryBloc!,
+    return Provider<GlobalBloc>.value(
+        value: globalBloc!,
         child: Sizer(builder: (context, oreientation, devicetype) {
           return GetMaterialApp(
             theme: ThemeData(

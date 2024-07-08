@@ -1,5 +1,11 @@
+import 'dart:math';
+
 import 'package:chillpill/PAGES/new_entry_bloc.dart';
+import 'package:chillpill/PAGES/success_screen/success_screen.dart';
 import 'package:chillpill/common/convert_time.dart';
+import 'package:chillpill/global_bloc.dart';
+import 'package:chillpill/models/errors.dart';
+import 'package:chillpill/models/medicine.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -39,13 +45,13 @@ class _medicine_typeState extends State<medicine_type> {
     nameController = TextEditingController();
     dosageController = TextEditingController();
     _newEntryBloc = NewEntryBloc();
-
     _scaffoldKey = GlobalKey<ScaffoldState>();
+    initializeErrorListen();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
     return Scaffold(
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
@@ -88,9 +94,7 @@ class _medicine_typeState extends State<medicine_type> {
                       ),
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             color: Colors.black,
-
                           ),
-
                     ),
                     const PanelTitle(
                       title: 'Dosage in mg',
@@ -184,7 +188,66 @@ class _medicine_typeState extends State<medicine_type> {
                                       color: Colors.white,
                                     )),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            String? medicineName;
+                            int? dosage;
+
+                            if (nameController.text == "") {
+                              _newEntryBloc.submitError(EntryError.nameNull);
+                              return;
+                            }
+                            if (nameController.text != "") {
+                              medicineName = nameController.text;
+                            }
+                            if (dosageController.text == "") {
+                              dosage = 0;
+                            }
+                            if (dosageController.text != "") {
+                              dosage = int.parse(dosageController.text);
+                            }
+                            for (var medicine
+                                in globalBloc.medicineList$!.value) {
+                              if (medicineName == medicine.medicineName) {
+                                _newEntryBloc
+                                    .submitError(EntryError.nameDuplicate);
+                                return;
+                              }
+                            }
+                            if (_newEntryBloc.selectIntervals!.value == 0) {
+                              _newEntryBloc.submitError(EntryError.interval);
+                              return;
+                            }
+                            if (_newEntryBloc.selectedTimeOfDay$!.value ==
+                                'Name') {
+                              _newEntryBloc.submitError(EntryError.startTime);
+                              return;
+                            }
+
+                            String medicineType = _newEntryBloc
+                                .selectedMedicineType!.value
+                                .toString()
+                                .substring(13);
+
+                            int interval = _newEntryBloc.selectIntervals!.value;
+                            String startTime =
+                                _newEntryBloc.selectedTimeOfDay$!.value;
+
+                            List<int> intIDs = makeIDs(
+                                24 / _newEntryBloc.selectIntervals!.value);
+                            List<String> notificationIDs =
+                                intIDs.map((i) => i.toString()).toList();
+
+                            Medicine newEntryMedicine = Medicine(
+                                notificationIDs: notificationIDs,
+                                medicineName: medicineName,
+                                dosage: dosage,
+                                medicineType: medicineType,
+                                interval: interval,
+                                startTime: startTime);
+                            globalBloc.updateMedicineList(newEntryMedicine);
+
+                            Get.to(SuccessScreen());
+                          },
                         ),
                       ),
                     ),
@@ -192,6 +255,50 @@ class _medicine_typeState extends State<medicine_type> {
             ),
           ),
         ));
+  }
+
+  void initializeErrorListen() {
+    _newEntryBloc.errorState$!.listen((EntryError error) {
+      switch (error) {
+        case EntryError.nameNull:
+          displayError("Please enter the medicine's name");
+          break;
+
+        case EntryError.nameDuplicate:
+          displayError("Medicine name already exists");
+          break;
+
+        case EntryError.dosage:
+          displayError("Please enter the dosage required");
+          break;
+
+        case EntryError.interval:
+          displayError("Please select the reminder's interval");
+          break;
+
+        case EntryError.startTime:
+          displayError("Please select the reminder's starting time");
+          break;
+        default:
+      }
+    });
+  }
+
+  void displayError(String error) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(error),
+      backgroundColor: Color(0xfff06292),
+      duration: const Duration(milliseconds: 2000),
+    ));
+  }
+
+  List<int> makeIDs(double n) {
+    var rng = Random();
+    List<int> ids = [];
+    for (int i = 0; i < n; i++) {
+      ids.add(rng.nextInt(1000000000));
+    }
+    return ids;
   }
 }
 
@@ -259,6 +366,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
   var _selected = 0;
   @override
   Widget build(BuildContext context) {
+    final NewEntryBloc newEntryBloc = Provider.of<NewEntryBloc>(context);
     return Padding(
       padding: EdgeInsets.only(top: 1.h),
       child: Row(
@@ -297,6 +405,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
               setState(
                 () {
                   _selected = newVal!;
+                  newEntryBloc.updateInterval(newVal);
                 },
               );
             },

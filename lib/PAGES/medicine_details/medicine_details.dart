@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
@@ -50,13 +51,15 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                       backgroundColor: Color(0xfff06292),
                       shape: const StadiumBorder(),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      openAlertBox(context);
+                    },
                     child: Text(
                       'Delete',
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Color(0xfffce4ec),
-                        fontWeight: FontWeight.w800,
-                      ),
+                            color: Color(0xfffce4ec),
+                            fontWeight: FontWeight.w800,
+                          ),
                     )),
               ),
               SizedBox(
@@ -66,6 +69,51 @@ class _MedicineDetailsState extends State<MedicineDetails> {
           ),
         ),
       ),
+    );
+  }
+
+  openAlertBox(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            bottomRight: Radius.circular(20.0),
+          )),
+          contentPadding: EdgeInsets.only(top: 1.h),
+          title: Text(
+            'Delete This Reminder?',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  color: Color(0xfff06292),
+              fontWeight: FontWeight.w500,
+                ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Cancel',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                'Ok',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Colors.purple.shade400,
+                    ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
