@@ -77,6 +77,7 @@ flutter:
     - assets/bottle.svg
     - assets/syringe.svg
     - assets/tablet.svg
+    - assets/check.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

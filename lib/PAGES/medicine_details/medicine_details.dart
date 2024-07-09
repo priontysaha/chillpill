@@ -1,3 +1,5 @@
+import 'package:chillpill/models/medicine.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,7 +7,8 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
 class MedicineDetails extends StatefulWidget {
-  const MedicineDetails({super.key});
+  const MedicineDetails(this.medicine, {Key? key}) : super(key: key);
+  final Medicine medicine;
 
   @override
   State<MedicineDetails> createState() => _MedicineDetailsState();
@@ -40,8 +43,8 @@ class _MedicineDetailsState extends State<MedicineDetails> {
           padding: EdgeInsets.all(2.h),
           child: Column(
             children: [
-              MainSection(),
-              ExtendedSection(),
+              MainSection(medicine: widget.medicine),
+              ExtendedSection(medicine: widget.medicine),
               Spacer(),
               SizedBox(
                 width: 100.w,
@@ -89,7 +92,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: Color(0xfff06292),
-              fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w500,
                 ),
           ),
           actions: [
@@ -119,24 +122,80 @@ class _MedicineDetailsState extends State<MedicineDetails> {
 }
 
 class MainSection extends StatelessWidget {
-  const MainSection({super.key});
+  const MainSection({super.key, this.medicine});
+  final Medicine? medicine;
+  Hero makeIcon(double size) {
+    if (medicine!.medicineType == 'Bottle') {
+      return Hero(
+        tag: medicine!.medicineName! + medicine!.medicineType!,
+        child: SvgPicture.asset(
+          'assets/bottle.svg',
+          color: Color(0xfff06292),
+          height: 7.h,
+        ),
+      );
+    } else if ((medicine!.medicineType == 'Pill')) {
+      return Hero(
+        tag: medicine!.medicineName! + medicine!.medicineType!,
+        child: SvgPicture.asset(
+          'assets/pill.svg',
+          color: Color(0xfff06292),
+          height: 7.h,
+        ),
+      );
+    } else if ((medicine!.medicineType == 'Syringe')) {
+      return Hero(
+        tag: medicine!.medicineName! + medicine!.medicineType!,
+        child: SvgPicture.asset(
+          'assets/syringe.svg',
+          color: Color(0xfff06292),
+          height: 7.h,
+        ),
+      );
+    } else if ((medicine!.medicineType == 'Tablet')) {
+      return Hero(
+        tag: medicine!.medicineName! + medicine!.medicineType!,
+        child: SvgPicture.asset(
+          'assets/tablet.svg',
+          color: Color(0xfff06292),
+          height: 7.h,
+        ),
+      );
+    }
+    return Hero(
+      tag: medicine!.medicineName! + medicine!.medicineType!,
+      child: Icon(
+        Icons.error,
+        color: Color(0xfff06292),
+        size: size,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SvgPicture.asset(
-          'assets/bottle.svg',
-          height: 10.h,
-          color: Color(0xfff06292),
-        ),
+        makeIcon(7.h),
         SizedBox(
           width: 2.w,
         ),
         Column(
-          children: const [
-            MainInfoTab(fieldTitle: 'Medicine Name', fieldInfo: 'Catapol'),
-            MainInfoTab(fieldTitle: 'Dosage', fieldInfo: '500 mg'),
+          children: [
+            Hero(
+              tag: medicine!.medicineName!,
+              child: Material(
+                color: Colors.transparent,
+                child: MainInfoTab(
+                    fieldTitle: 'Medicine Name',
+                    fieldInfo: medicine!.medicineName!),
+              ),
+            ),
+            MainInfoTab(
+                fieldTitle: 'Dosage',
+                fieldInfo: medicine!.dosage == 0
+                    ? 'Not Specified'
+                    : "${medicine!.dosage} mg"),
           ],
         )
       ],
@@ -178,24 +237,29 @@ class MainInfoTab extends StatelessWidget {
 }
 
 class ExtendedSection extends StatelessWidget {
-  const ExtendedSection({super.key});
+  const ExtendedSection({super.key, this.medicine});
+  final Medicine? medicine;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       shrinkWrap: true,
-      children: const [
+      children: [
         ExtendedInfoTab(
           fieldTitle: 'Medicine Type',
-          fieldInfo: 'Pill',
+          fieldInfo: medicine!.medicineType! == 'None'
+              ? 'Not Specified'
+              : medicine!.medicineType!,
         ),
         ExtendedInfoTab(
           fieldTitle: 'Dosage Intervals',
-          fieldInfo: 'Every 8 hours | 3 times a day',
+          fieldInfo:
+              'Every ${medicine!.interval} hours | ${medicine!.interval == 24 ? "One time a day" : "${(24 / medicine!.interval!).floor()} times a day"}',
         ),
         ExtendedInfoTab(
           fieldTitle: 'Start Time',
-          fieldInfo: '01:19',
+          fieldInfo:
+              '${medicine!.startTime![0]}${medicine!.startTime![1]}:${medicine!.startTime![2]}:${medicine!.startTime![3]}',
         ),
       ],
     );
