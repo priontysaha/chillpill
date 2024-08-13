@@ -33,13 +33,16 @@ class Welcome extends StatelessWidget {
                 right: 0,
                 child: Column(
                   children: [
-                    Text(
-                      "Welcome Back!",
-                      style: TextStyle(
-                        fontSize: 50.0,
-                        fontStyle: FontStyle.normal,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                    Center(
+                      child: Text(
+                        " On time,Every time",
+                        style: TextStyle(
+                          fontSize: 40.0,
+                          fontStyle: FontStyle.normal,
+                          color: Color(0xfff06292),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'ConcertOne',
+                        ),
                       ),
                     ),
                     Text(
@@ -47,8 +50,9 @@ class Welcome extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 30.0,
                         fontStyle: FontStyle.normal,
-                        color: Colors.white,
+                        color: Color(0xfff06292),
                         fontWeight: FontWeight.bold,
+                        fontFamily: 'ConcertOne',
                       ),
                     )
                   ],

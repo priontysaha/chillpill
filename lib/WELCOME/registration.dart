@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-
 class registration extends StatefulWidget {
   @override
   State<registration> createState() => _registrationState();
@@ -131,7 +130,8 @@ class _registrationState extends State<registration> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    UserCredential? cred = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    UserCredential? cred = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
 
     User? user = cred.user;
     if (user != null) {

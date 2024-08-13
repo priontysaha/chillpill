@@ -89,7 +89,7 @@ class Topcontainer extends StatelessWidget {
             bottom: 1.h,
           ),
           child: Text(
-            "Seamless Remiders,\nHelthier You.",
+            "Seamless Reminders,\nHealthier You.",
             style: TextStyle(
               fontSize: 30.0,
               fontStyle: FontStyle.normal,
@@ -103,7 +103,7 @@ class Topcontainer extends StatelessWidget {
           alignment: Alignment.topLeft,
           padding: EdgeInsets.only(bottom: 1.h),
           child: Text(
-            "\nwelcome to take daily dose",
+            "\nWelcome to take daily dose",
             style: TextStyle(
               fontSize: 20.0,
               fontStyle: FontStyle.normal,

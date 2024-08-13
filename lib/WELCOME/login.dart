@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chillpill/WELCOME/registration.dart';
 import 'package:flutter/material.dart';
@@ -10,37 +9,31 @@ import 'homepage.dart';
 class login extends StatefulWidget {
   const login({super.key});
 
-
   @override
   State<login> createState() => _loginState();
 }
 
 class _loginState extends State<login> {
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
 
-
     super.dispose();
   }
+
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text('Login',
             style: TextStyle(
-                color: Colors.purple.shade700,
-                fontWeight: FontWeight.w500
-            )
-        ),
+                color: Colors.purple.shade700, fontWeight: FontWeight.w500)),
         backgroundColor: Colors.white,
       ),
       body: Container(
@@ -48,19 +41,16 @@ class _loginState extends State<login> {
         height: double.infinity,
         decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors:[
+                colors: [
                   Color(0xfff8bbd0),
-                  Color(0xfffce4ec,
-                      )
-
+                  Color(
+                    0xfffce4ec,
+                  )
                 ],
-
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                stops: [0.0,1.0],
-                tileMode: TileMode.clamp)
-        ),
-
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp)),
         padding: EdgeInsets.only(left: 20, right: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -96,31 +86,39 @@ class _loginState extends State<login> {
             SizedBox(
               height: 20,
             ),
-            SizedBox(height: 50,),
+            SizedBox(
+              height: 50,
+            ),
             ElevatedButton(
                 onPressed: _signIn,
-                child: Text("Log In", style: TextStyle(fontSize: 20.0),)
-            ),
+                child: Text(
+                  "Log In",
+                  style: TextStyle(fontSize: 20.0),
+                )),
             SizedBox(height: 10),
             SizedBox(
-              height: 25,
-              child: GestureDetector(
-                onTap: () {
-                  Get.to(registration());
-                },
-                child: Text('Create new account', style: TextStyle(
-                    fontSize:20.00,fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            )
+                height: 25,
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(registration());
+                  },
+                  child: Text(
+                    'Create new account',
+                    style: TextStyle(
+                        fontSize: 20.00,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                )
 
-
-            /*OutlinedButton(
+                /*OutlinedButton(
                   onPressed:(){
                     Get.to(Registration());
                   },
                   child: Text('Don\'t have an account?')
               )*/
-            )],
+                )
+          ],
         ),
       ),
     );
@@ -130,16 +128,15 @@ class _loginState extends State<login> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    UserCredential? cred = await _auth.signInWithEmailAndPassword(email: email, password: password);
+    UserCredential? cred = await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
 
     User? user = cred.user;
-    if(user != null){
+    if (user != null) {
       print("User is successfully signedIn");
       //Navigator.pushNamed(context, "/home");
       Get.offAll(homepage());
-    }
-    else
+    } else
       print("Some error happened");
   }
-
 }

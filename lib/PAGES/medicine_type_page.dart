@@ -107,7 +107,7 @@ class _medicine_typeState extends State<medicine_type> {
                         border: UnderlineInputBorder(),
                       ),
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: Color(0xfffce4ec),
+                            color: Colors.black,
                           ),
                     ),
                     SizedBox(
