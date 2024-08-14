@@ -1,4 +1,5 @@
 import 'package:chillpill/PAGES/medicine_type_page.dart';
+import 'package:chillpill/WELCOME/homepage.dart';
 import 'package:chillpill/global_bloc.dart';
 import 'package:chillpill/models/medicine.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,7 +21,7 @@ class MedicineDetails extends StatefulWidget {
 class _MedicineDetailsState extends State<MedicineDetails> {
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
+    final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +60,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                       shape: const StadiumBorder(),
                     ),
                     onPressed: () {
-                      openAlertBox(context, _globalBloc);
+                      openAlertBox(context, globalBloc);
                     },
                     child: Text(
                       'Delete',
@@ -112,7 +113,8 @@ class _MedicineDetailsState extends State<MedicineDetails> {
             TextButton(
               onPressed: () {
                 _globalBloc.removeMedicine(widget.medicine);
-                Navigator.popUntil(context, ModalRoute.withName('/'));
+                Get.offAll(homepage());
+
               },
               child: Text(
                 'Ok',
