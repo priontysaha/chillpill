@@ -60,6 +60,7 @@ class _medicine_typeState extends State<medicine_type> {
               style: TextStyle(
                   color: Colors.purple.shade700, fontWeight: FontWeight.w500)),
           backgroundColor: Colors.white,
+          centerTitle: true,
         ),
         body: Container(
           width: double.infinity,

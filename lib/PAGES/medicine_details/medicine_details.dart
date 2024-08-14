@@ -1,3 +1,4 @@
+import 'package:chillpill/PAGES/medicine_type_page.dart';
 import 'package:chillpill/global_bloc.dart';
 import 'package:chillpill/models/medicine.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,21 +18,17 @@ class MedicineDetails extends StatefulWidget {
 }
 
 class _MedicineDetailsState extends State<MedicineDetails> {
-
-
   @override
   Widget build(BuildContext context) {
-
-    final GlobalBloc _globalBloc=Provider.of<GlobalBloc>(context);
+    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text('Details',
+        title: Text('Details',
               style: TextStyle(
                   color: Colors.purple.shade700, fontWeight: FontWeight.w500)),
-        ),
         backgroundColor: Colors.white,
+        centerTitle: true,
       ),
       body: Container(
         width: double.infinity,
