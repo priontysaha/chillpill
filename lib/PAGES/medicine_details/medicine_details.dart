@@ -1,9 +1,11 @@
+import 'package:chillpill/global_bloc.dart';
 import 'package:chillpill/models/medicine.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class MedicineDetails extends StatefulWidget {
@@ -15,8 +17,13 @@ class MedicineDetails extends StatefulWidget {
 }
 
 class _MedicineDetailsState extends State<MedicineDetails> {
+
+
   @override
   Widget build(BuildContext context) {
+
+    final GlobalBloc _globalBloc=Provider.of<GlobalBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -55,7 +62,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                       shape: const StadiumBorder(),
                     ),
                     onPressed: () {
-                      openAlertBox(context);
+                      openAlertBox(context, _globalBloc);
                     },
                     child: Text(
                       'Delete',
@@ -75,7 +82,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
     );
   }
 
-  openAlertBox(BuildContext context) {
+  openAlertBox(BuildContext context, GlobalBloc _globalBloc) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -106,7 +113,10 @@ class _MedicineDetailsState extends State<MedicineDetails> {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                _globalBloc.removeMedicine(widget.medicine);
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+              },
               child: Text(
                 'Ok',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
