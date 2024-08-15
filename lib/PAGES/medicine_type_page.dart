@@ -124,35 +124,35 @@ class _medicine_typeState extends State<medicine_type> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 MedicineTypeColumn(
-                                    medicineType: MedicineType.pill,
+                                    medicineType: MedicineType.Pill,
                                     name: 'Pill',
                                     iconValue: 'assets/pill.svg',
                                     isSelected:
-                                        snapshot.data == MedicineType.pill
+                                        snapshot.data == MedicineType.Pill
                                             ? true
                                             : false),
                                 MedicineTypeColumn(
-                                    medicineType: MedicineType.bottle,
+                                    medicineType: MedicineType.Bottle,
                                     name: 'Bottle',
                                     iconValue: 'assets/bottle.svg',
                                     isSelected:
-                                        snapshot.data == MedicineType.bottle
+                                        snapshot.data == MedicineType.Bottle
                                             ? true
                                             : false),
                                 MedicineTypeColumn(
-                                    medicineType: MedicineType.syringe,
+                                    medicineType: MedicineType.Syringe,
                                     name: 'Syringe',
                                     iconValue: 'assets/syringe.svg',
                                     isSelected:
-                                        snapshot.data == MedicineType.syringe
+                                        snapshot.data == MedicineType.Syringe
                                             ? true
                                             : false),
                                 MedicineTypeColumn(
-                                    medicineType: MedicineType.tablet,
+                                    medicineType: MedicineType.Tablet,
                                     name: 'Tablet',
                                     iconValue: 'assets/tablet.svg',
                                     isSelected:
-                                        snapshot.data == MedicineType.tablet
+                                        snapshot.data == MedicineType.Tablet
                                             ? true
                                             : false),
                               ],
