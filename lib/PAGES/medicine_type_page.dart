@@ -1,7 +1,9 @@
 import 'dart:math';
+import 'dart:async';
 
 import 'package:chillpill/PAGES/new_entry_bloc.dart';
 import 'package:chillpill/PAGES/success_screen/success_screen.dart';
+import 'package:chillpill/WELCOME/homepage.dart';
 import 'package:chillpill/common/convert_time.dart';
 import 'package:chillpill/global_bloc.dart';
 import 'package:chillpill/models/errors.dart';
@@ -9,6 +11,7 @@ import 'package:chillpill/models/medicine.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 //import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -27,7 +30,7 @@ class medicine_type extends StatefulWidget {
 class _medicine_typeState extends State<medicine_type> {
   late TextEditingController nameController;
   late TextEditingController dosageController;
-
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   late NewEntryBloc _newEntryBloc;
   late GlobalKey<ScaffoldState> _scaffoldKey;
 
@@ -44,8 +47,10 @@ class _medicine_typeState extends State<medicine_type> {
     super.initState();
     nameController = TextEditingController();
     dosageController = TextEditingController();
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     _newEntryBloc = NewEntryBloc();
     _scaffoldKey = GlobalKey<ScaffoldState>();
+    initializeNotification();
     initializeErrorListen();
   }
 
@@ -247,7 +252,14 @@ class _medicine_typeState extends State<medicine_type> {
                                 startTime: startTime);
                             globalBloc.updateMedicineList(newEntryMedicine);
 
-                            Get.to(SuccessScreen());
+                            scheduleNotification(newEntryMedicine);
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SuccessScreen()));
+
+                            //Get.to(SuccessScreen());
                           },
                         ),
                       ),
@@ -300,6 +312,62 @@ class _medicine_typeState extends State<medicine_type> {
       ids.add(rng.nextInt(1000000000));
     }
     return ids;
+  }
+
+  initializeNotification() async {
+    var initializationSettingsAndroid =
+        const AndroidInitializationSettings('@mipmap/launcher_icon');
+
+    var initializationSettingsIOS = const DarwinInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future onSelectNotification(String? payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: $payload');
+    }
+    await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const homepage()));
+  }
+
+  Future<void> scheduleNotification(Medicine medicine) async {
+    var hour = int.parse(medicine.startTime![0] + medicine.startTime![1]);
+    var ogValue = hour;
+    var minute = int.parse(medicine.startTime![2] + medicine.startTime![3]);
+
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+        'repeatDailyAtTime channel id', 'repeatDailyAtTime channel name',
+        importance: Importance.max,
+        ledColor: Colors.purpleAccent,
+        ledOffMs: 1000,
+        ledOnMs: 1000,
+        enableLights: true);
+
+    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails();
+
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+
+    for (int i = 0; i < (24 / medicine.interval!).floor(); i++) {
+      if (hour + (medicine.interval! * i) > 23) {
+        hour = hour + (medicine.interval! * i) - 24;
+      } else {
+        hour = hour + (medicine.interval! * i);
+      }
+      await flutterLocalNotificationsPlugin.periodicallyShowWithDuration(
+          int.parse(medicine.notificationIDs![i]),
+          'Reminder: ${medicine.medicineName}',
+          medicine.medicineType.toString() != MedicineType.None.toString()
+              ? 'It is time to take your ${medicine.medicineType!.toLowerCase()}, according to schedule'
+              : 'It is time to take your medicine according to schedule',
+          Time(hour, minute, 0),
+          platformChannelSpecifics);
+      hour = ogValue;
+    }
   }
 }
 
