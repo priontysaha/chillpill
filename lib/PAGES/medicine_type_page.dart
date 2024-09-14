@@ -364,7 +364,7 @@ class _medicine_typeState extends State<medicine_type> {
           medicine.medicineType.toString() != MedicineType.None.toString()
               ? 'It is time to take your ${medicine.medicineType!.toLowerCase()}, according to schedule'
               : 'It is time to take your medicine according to schedule',
-          Time(hour, minute, 0),
+          Duration(hours: hour,minutes:  minute),
           platformChannelSpecifics);
       hour = ogValue;
     }
