@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,7 @@ class GlobalBloc {
         (medicine) => medicine.medicineName == tobeRemoved.medicineName);
 
     for (int i = 0; i < (24 / tobeRemoved.interval!).floor(); i++) {
-      flutterLocalNotificationsPlugin.cancel(tobeRemoved.notificationIDs![i]);
+      flutterLocalNotificationsPlugin.cancel(int.parse(tobeRemoved.notificationIDs![i]));
     }
 
     if (blockList.isNotEmpty) {
@@ -39,6 +40,7 @@ class GlobalBloc {
 
     sharedUser.setStringList('medicines', medicineJsonList);
     _medicineList$!.add(blockList);
+    await FirebaseFirestore.instance.collection('Medicines').doc(tobeRemoved.medicineName).delete();
   }
 
   Future updateMedicineList(Medicine newMedicine) async {
@@ -57,6 +59,8 @@ class GlobalBloc {
       medicineJsonList.add(newMedicineJson);
     }
     sharedUser.setStringList('medicines', medicineJsonList);
+
+    await FirebaseFirestore.instance.collection('Medicines').doc(newMedicine.medicineName).set(newMedicine.toJson());
   }
 
   Future makeMedicineList() async {
