@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:async';
-
 import 'package:chillpill/PAGES/new_entry_bloc.dart';
 import 'package:chillpill/PAGES/success_screen/success_screen.dart';
 import 'package:chillpill/WELCOME/homepage.dart';
@@ -363,7 +362,7 @@ class _medicine_typeState extends State<medicine_type> {
           medicine.medicineType.toString() != MedicineType.None.toString()
               ? 'It is time to take your ${medicine.medicineType!.toLowerCase()}, according to schedule'
               : 'It is time to take your medicine according to schedule',
-          Duration(hours: hour,minutes:  minute),
+          Duration(hours: hour, minutes: minute),
           platformChannelSpecifics);
       hour = ogValue;
     }
@@ -382,6 +381,9 @@ class _SelectTimeState extends State<SelectTime> {
   bool _clicked = false;
 
   Future<TimeOfDay> _selectTime() async {
+    final NewEntryBloc newEntryBloc =
+        Provider.of<NewEntryBloc>(context, listen: false);
+
     final TimeOfDay? picked =
         await showTimePicker(context: context, initialTime: _time);
 
@@ -389,6 +391,9 @@ class _SelectTimeState extends State<SelectTime> {
       setState(() {
         _time = picked;
         _clicked = true;
+
+        newEntryBloc.updateTime(convertTime(_time.hour.toString()) +
+            convertTime(_time.minute.toString()));
       });
     }
     return picked!;
